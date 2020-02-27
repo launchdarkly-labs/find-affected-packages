@@ -26,7 +26,10 @@ func TestCalcAffectedPackages(t *testing.T) {
 			"github.com/orgA/repoA/subPkg3": true,
 		},
 	}
-	changedLocalPackages := []string{"github.com/orgA/repoA/subPkg3"}
+	changedLocalPackages := []string{
+		"github.com/orgA/repoA/subPkg3",
+		"github.com/orgA/repoA/notRealPkg", // To simulate cases where we see a .go file changed somewhere that isn't a package go list returned
+	}
 	changedModules := []string{"github.com/orgB/repoB"}
 
 	affectedPackages := calcAffectedPackages(packagesToDeps, changedLocalPackages, changedModules)

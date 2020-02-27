@@ -33,8 +33,10 @@ func main() {
 func calcAffectedPackages(localPackagesToDeps packagesToDepMap, changedLocalPackages, changedModules []string) []string {
 	affectedPackageMap := make(map[string]bool)
 	for _, pkg := range changedLocalPackages {
-		// Any directly changed package is affected (obviously)
-		affectedPackageMap[pkg] = true
+		if _, ok := localPackagesToDeps[pkg]; ok {
+			// Any directly changed package is affected, as long as it came back from `go list <filterPackages>`
+			affectedPackageMap[pkg] = true
+		}
 
 		// Add all packages which depend on this changed package (including indirectly)
 		for pkgPath, pkgDeps := range localPackagesToDeps {
